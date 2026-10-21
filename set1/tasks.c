@@ -1,5 +1,6 @@
 #include "tasks.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Calculates the area of a rectangle
@@ -282,7 +283,23 @@ int count_words(char *words) {
 //   - There is a single space between each consecutive words
 // Example: count_words("all your base") -> 4
 int max_word_length(char *words) {
-    // TODO
+  int check_max_length(int *max_length, int length) {
+      if (length > *max_length) {
+        *max_length = length;
+      }
+  }
+  int length = 0;
+  int max_length = 0;
+  for (int i = 0; i < strlen(words); i++) {
+    if (words[i] == ' ') {
+      check_max_length(&max_length, length);
+      length = 0;
+    } else {
+      length++;
+    }
+  }
+  check_max_length(&max_length, length);
+  return max_length;
 }
 
 // Checks if the given word is a palindrome
@@ -290,21 +307,52 @@ int max_word_length(char *words) {
 // Example: is_palindrome("abba") -> 1
 // Example: is_palindrome("abca") -> 0
 int is_palindrome(char *word) {
-    // TODO
+  int i = 0;
+  int j = strlen(word) - 1;
+  while (i < j) {
+    if (word[i] != word[j]) {
+      return 0;
+    }
+    i++, j--;
+  }
+  return 1;
 }
 
 // Counts the number of times any letter appears in a string
 // Example: count_letters("aybabtu", "au") -> 3
 int count_letters_set(char *string, char *letters) {
-    // TODO
+  int counter = 0;
+  for (int i = 0; i < strlen(string); i++) {
+    for (int j = 0; j < strlen(letters); j++) {
+      if (string[i] == letters[j]) {
+        counter++;
+      }
+    }
+  }
+  return counter;
 }
 
 // Checks if two words are anagrams of each other
 //   - The words consist of letters a..z
 // Example: check_anagrams("abca", "aacb") -> 1
 // Example: check_anagrams("abca", "abcb") -> 0
+int cmp_char(const void *a, const void *b) {
+  unsigned char ca = *(const unsigned char *)a;
+  unsigned char cb = *(const unsigned char *)b;
+  return (ca > cb) - (ca < cb);
+}
+
 int check_anagrams(char *word1, char *word2) {
-    // TODO
+  int w1_length = strlen(word1);
+  int w2_length = strlen(word2);
+  char w1[w1_length + 1];
+  char w2[w2_length + 1];
+  strcpy(w1, word1);
+  strcpy(w2, word2);
+  qsort(w1, w1_length, sizeof(char), cmp_char);
+  qsort(w2, w2_length, sizeof(char), cmp_char);
+  int result = strcmp(w1, w2);
+  if (result == 0) { return 1; } else { return 0; }
 }
 
 // Checks a University of Helsinki student number
@@ -324,8 +372,8 @@ int valid_student_number(char *number) {
 
 #ifdef TEST_MODULE
 void main() {
-  char str[] = "is a word";
-  int result = count_words(str);
+  char str[] = "aab";
+  int result = check_anagrams(str, "aba");
   printf("%d\n", result);
 
   return;
