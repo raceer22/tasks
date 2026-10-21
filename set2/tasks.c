@@ -1,10 +1,31 @@
 #include "tasks.h"
+#include <stdio.h>
+
+int int_to_bin(unsigned int x) {
+  int int_size = sizeof(int) * 8;
+  char x_bin[int_size + 1];
+  for (int k = int_size - 1; k >= 0; k--) {
+    if (x & (1 << k)) {
+      x_bin[int_size - k - 1] = '1';
+    } else {
+      x_bin[int_size - k - 1] = '0';
+    }
+  }
+  printf("%s\n", x_bin);
+}
 
 // Counts the number of one bits in x
 // Example: bit_count(123) -> 6
 //    123 = 1111011
 int bit_count(unsigned int x) {
-    // TODO
+  int count = 0;
+  int int_size = sizeof(int) * 8;
+  for (int k = int_size - 1; k >= 0; k--) {
+    if (x & (1 << k)) {
+      count++;
+    }
+  }
+  return count;
 }
 
 // Returns the parity of x
@@ -13,7 +34,12 @@ int bit_count(unsigned int x) {
 // Example: parity(123) -> 0
 //    123 = 1111011
 int parity(unsigned int x) {
-    // TODO
+  int count = bit_count(x);
+  if (count % 2 == 1) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 // Returns the bit at position pos
@@ -23,7 +49,11 @@ int parity(unsigned int x) {
 //   123 = 1111011
 //             ^ ^
 int get_bit(unsigned int x, int pos) {
-    // TODO
+  if ((x & (1 << pos)) == 0) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 // Sets the bit at position pos to 1
@@ -31,7 +61,11 @@ int get_bit(unsigned int x, int pos) {
 //   123 = 1111011
 //   127 = 1111111
 unsigned int set_bit(unsigned int x, int pos) {
-    // TODO
+  int value = get_bit(x, pos);
+  if (!value) {
+    x += (1 << pos);
+  }
+  return x;
 }
 
 // Sets the bit at position pos to 0
@@ -39,7 +73,11 @@ unsigned int set_bit(unsigned int x, int pos) {
 //   123 = 1111011
 //   122 = 1111010
 unsigned int clear_bit(unsigned int x, int pos) {
-    // TODO
+  int value = get_bit(x, pos);
+  if (value) {
+    x -= (1 << pos);
+  }
+  return x;
 }
 
 // Flips the bit at position pos
@@ -49,7 +87,13 @@ unsigned int clear_bit(unsigned int x, int pos) {
 //   122 = 1111010
 //   127 = 1111111
 unsigned int flip_bit(unsigned int x, int pos) {
-    // TODO
+  int value = get_bit(x, pos);
+  if (value) {
+    x -= (1 << pos);
+  } else {
+    x += (1 << pos);
+  }
+  return x;
 }
 
 // Returns the position of the highest one bit
@@ -58,7 +102,13 @@ unsigned int flip_bit(unsigned int x, int pos) {
 //   42 = 101010
 //        ^
 int highest_bit_pos(unsigned int x) {
-    // TODO
+  int k = sizeof(int) * 8 - 1;
+  while (1) {
+    if (x & (1 << k)) {
+      return k;
+    }
+    k--;
+  }
 }
 
 // Returns the position of the lowest one bit
@@ -67,7 +117,13 @@ int highest_bit_pos(unsigned int x) {
 //   42 = 101010
 //            ^
 int lowest_bit_pos(unsigned int x) {
-    // TODO
+  int k = 0;
+  while (1) {
+    if (x & (1 << k)) {
+      return k;
+    }
+    k++;
+  }
 }
 
 // Sets the lowest one bit to zero
@@ -75,15 +131,14 @@ int lowest_bit_pos(unsigned int x) {
 //   42 = 101010
 //   40 = 101000
 unsigned int clear_lowest_bit(unsigned int x) {
-    // TODO
+  int pos = lowest_bit_pos(x);
+  return clear_bit(x, pos);
 }
 
 // Returns 1 if x is a power of two, otherwise returns 0
 // Example: is_power_of_two(16) -> 1
 // Example: is_power_of_two(17) -> 0
-int is_power_of_two(unsigned int x) {
-    // TODO
-}
+int is_power_of_two(unsigned int x) { return (bit_count(x) == 1); }
 
 // Counts the number of bit positions where a and b have the same bit
 // Example: common_bit_count(42, 1337) -> 27
@@ -91,7 +146,14 @@ int is_power_of_two(unsigned int x) {
 //   1337 = 00000000000000000000010100111001
 //          ^^^^^^^^^^^^^^^^^^^^^ ^ ^^^ ^^
 int common_bit_count(unsigned int a, unsigned int b) {
-    // TODO
+  int k = sizeof(int) * 8 - 1;
+  int count = 0;
+  for (k; k >= 0; k--) {
+    if (get_bit(a, k) == get_bit(b, k)) {
+      count++;
+    }
+  }
+  return count;
 }
 
 // Rotates all 32 bits of x one position to the left
@@ -100,7 +162,7 @@ int common_bit_count(unsigned int a, unsigned int b) {
 //   3333333333 = 11000110101011101010000101010101
 //   2371699371 = 10001101010111010100001010101011
 unsigned int rotate_left(unsigned int x) {
-    // TODO
+  // TODO
 }
 
 // Rotates all 32 bits of x one position to the right
@@ -109,7 +171,7 @@ unsigned int rotate_left(unsigned int x) {
 //   3333333333 = 11000110101011101010000101010101
 //   3814150314 = 11100011010101110101000010101010
 unsigned int rotate_right(unsigned int x) {
-    // TODO
+  // TODO
 }
 
 // Flips all 32 bits of x
@@ -117,7 +179,7 @@ unsigned int rotate_right(unsigned int x) {
 //         1337 = 00000000000000000000010100111001
 //   4294965958 = 11111111111111111111101011000110
 unsigned int flip_all_bits(unsigned int x) {
-    // TODO
+  // TODO
 }
 
 // Swaps every pair of adjacent bits
@@ -125,7 +187,7 @@ unsigned int flip_all_bits(unsigned int x) {
 //   1337 = 010100111001
 //   2614 = 101000110110
 unsigned int swap_adjacent_bits(unsigned int x) {
-    // TODO
+  // TODO
 }
 
 // Reverses the order of all bits of x
@@ -133,11 +195,22 @@ unsigned int swap_adjacent_bits(unsigned int x) {
 //         1337 = 00000000000000000000010100111001
 //   2627731456 = 10011100101000000000000000000000
 unsigned int reverse_bits(unsigned int x) {
-    // TODO
+  // TODO
 }
 
 // Returns 1 ^ 2 ^ 3 ^ ... ^ n.
 // Example: xor_sum(5) -> 1
 long xor_sum(int n) {
-    // TODO
+  // TODO
 }
+
+#ifdef TEST_MODULE
+void main() {
+
+  unsigned int value = 1;
+  int result = common_bit_count(3, 6);
+  printf("%d\n", result);
+
+  return;
+}
+#endif
