@@ -1,6 +1,10 @@
 #include "tasks.h"
 #include <stdio.h>
 
+// Helper functions
+
+int int_size() { return sizeof(int) * 8; }
+
 int int_to_bin(unsigned int x) {
   int int_size = sizeof(int) * 8;
   char x_bin[int_size + 1];
@@ -13,6 +17,8 @@ int int_to_bin(unsigned int x) {
   }
   printf("%s\n", x_bin);
 }
+
+// Tasks
 
 // Counts the number of one bits in x
 // Example: bit_count(123) -> 6
@@ -162,7 +168,8 @@ int common_bit_count(unsigned int a, unsigned int b) {
 //   3333333333 = 11000110101011101010000101010101
 //   2371699371 = 10001101010111010100001010101011
 unsigned int rotate_left(unsigned int x) {
-  // TODO
+  int last_bit = get_bit(x, int_size() - 1);
+  return (x << 1) + last_bit;
 }
 
 // Rotates all 32 bits of x one position to the right
@@ -171,23 +178,24 @@ unsigned int rotate_left(unsigned int x) {
 //   3333333333 = 11000110101011101010000101010101
 //   3814150314 = 11100011010101110101000010101010
 unsigned int rotate_right(unsigned int x) {
-  // TODO
+  int first_bit = get_bit(x, 0);
+  return (x >> 1) + (first_bit << (int_size() - 1));
 }
 
 // Flips all 32 bits of x
 // Example: flip_all_bits(1337) -> 4294965958
 //         1337 = 00000000000000000000010100111001
 //   4294965958 = 11111111111111111111101011000110
-unsigned int flip_all_bits(unsigned int x) {
-  // TODO
-}
+unsigned int flip_all_bits(unsigned int x) { return ~x; }
 
 // Swaps every pair of adjacent bits
 // Example: swap_adjacent_bits(1337) -> 2614
 //   1337 = 010100111001
 //   2614 = 101000110110
 unsigned int swap_adjacent_bits(unsigned int x) {
-  // TODO
+  int even_mask = 1431655765;
+  int odd_mask = even_mask << 1;
+  return ((x ^ even_mask) | (x ^ odd_mask));
 }
 
 // Reverses the order of all bits of x
@@ -195,20 +203,28 @@ unsigned int swap_adjacent_bits(unsigned int x) {
 //         1337 = 00000000000000000000010100111001
 //   2627731456 = 10011100101000000000000000000000
 unsigned int reverse_bits(unsigned int x) {
-  // TODO
+  int k = int_size() - 1;
+  int result = 0;
+  for (int i = 0; i <= k; i++) {
+    result += (get_bit(x, i) << (k - i));
+  }
+  return result;
 }
 
 // Returns 1 ^ 2 ^ 3 ^ ... ^ n.
 // Example: xor_sum(5) -> 1
 long xor_sum(int n) {
-  // TODO
+  int result = 0;
+  for (int i = 1; i <= n; i++) {
+    result = result ^ i;
+  }
+  return result;
 }
 
 #ifdef TEST_MODULE
 void main() {
-
-  unsigned int value = 1;
-  int result = common_bit_count(3, 6);
+  int value = 1337;
+  int result = swap_adjacent_bits(value);
   printf("%d\n", result);
 
   return;
