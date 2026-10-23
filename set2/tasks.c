@@ -193,9 +193,9 @@ unsigned int flip_all_bits(unsigned int x) { return ~x; }
 //   1337 = 010100111001
 //   2614 = 101000110110
 unsigned int swap_adjacent_bits(unsigned int x) {
-  int even_mask = 1431655765;
-  int odd_mask = even_mask << 1;
-  return ((x ^ even_mask) | (x ^ odd_mask));
+  unsigned int even_mask = 1431655765;
+  unsigned int odd_mask = even_mask << 1;
+  return (((x & even_mask) << 1) | ((x & odd_mask) >> 1));
 }
 
 // Reverses the order of all bits of x
@@ -223,8 +223,8 @@ long xor_sum(int n) {
 
 #ifdef TEST_MODULE
 void main() {
-  int value = 1337;
-  int result = swap_adjacent_bits(value);
+  unsigned int value = 1337;
+  unsigned int result = swap_adjacent_bits(value);
   printf("%d\n", result);
 
   return;
