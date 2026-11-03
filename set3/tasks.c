@@ -1,30 +1,90 @@
 #include "tasks.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // Counts the number of times pattern occurs in string
 // Example: count("aybabtu", "bab") -> 1
 // Example: count("aaaaaa", "aa") -> 5
 int count(char *string, char *pattern) {
-    // TODO
+    int pattern_len = strlen(pattern);
+    int string_len = strlen(string);
+    int occurs = 1;
+    int count = 0;
+    for (int i = 0; i < string_len - pattern_len + 1; i++) {
+        occurs = 1;
+        for (int j = 0; j < pattern_len; j++) {
+            if (string[i+j] != pattern[j]) {
+                    occurs = 0;
+                break;
+            }
+        }
+        if (occurs) {
+            count++;
+        }
+    }
+    return count;
 }
 
 // Checks if string starts with prefix
 // Example: starts_with("aybabtu", "ayb") -> 1
 // Example: starts_with("aybabtu", "lol") -> 0
 int starts_with(char *string, char *prefix) {
-    // TODO
+    int check = 1;
+    for (int i = 0; i < strlen(prefix); i++) {
+        if (string[i] != prefix[i]) {
+            check = 0;
+            break;
+        }
+    }
+    return check;
 }
 
 // Checks if string ends with suffix
 // Example: ends_with("aybabtu", "btu") -> 1
 // Example: ends_with("aybabtu", "lol") -> 0
 int ends_with(char *string, char *suffix) {
-    // TODO
+    int check = 1;
+    int len_string = strlen(string);
+    int len_suffix = strlen(suffix);
+    if (len_string - len_suffix < 0) {
+        return 0;
+    }
+    for (int i = 0; i < strlen(suffix); i++) {
+        if (string[len_string - len_suffix + i] != suffix[i]) {
+            check = 0;
+            break;
+        }
+    }
+    return check;
 }
 
 // Concatenates the strings in the array into a single string
 // Example: {"apina", "banaani", "cembalo"} -> "apinabanaanicembalo"
 char* concat(char **array, int n) {
-    // TODO
+    if (array == NULL || n <= 0) {
+       char *empty = malloc(1); 
+       if (empty) { empty[0] = '\0'; }
+       return empty;
+    }
+
+    int total_len = 0; 
+    for (int i = 0; i < n; i++) {
+        if (array != NULL) {
+            total_len += strlen(array[i]);
+        }
+    }
+
+    char *result = malloc(total_len + 1);
+    if (result == NULL) { return NULL; };
+    result[0] = '\0';
+
+    for (int i = 0; i < n; i++) {
+        if (array[i] != NULL) {
+            strcat(result, array[i]);
+        }
+    }
+    return result;
 }
 
 // Returns the first position where pattern occurs in string
@@ -32,13 +92,25 @@ char* concat(char **array, int n) {
 // Example: find("aybabtu", "bab") -> 2
 // Example: find("aybabtu", "lol") -> -1
 int find(char *string, char *pattern) {
-    // TODO
+    int len_string = strlen(string);
+    int len_pattern = strlen(pattern);
+    for (int i = 0; i < len_string - len_pattern + 1; i++) {
+        if (!strncmp(string + i, pattern, len_pattern)) { 
+            return i; 
+        }
+    }
+    return -1;
 }
 
 // Creates a string that repeats pattern n times
 // Example: repeat("abc", 4) -> "abcabcabcabc"
 char* repeat(char *pattern, int n) {
-    // TODO
+    char *result = malloc(strlen(pattern) * n + 1);
+    result[0] = '\0';
+    for (int i = 0; i < n; i++) {
+        strcat(result, pattern);
+    }
+    return result;
 }
 
 // Removes spaces around the string
@@ -107,3 +179,13 @@ int split(char* string, char delimiter, char*** array) {
 void sort_strings(char **array, int n) {
     // TODO
 }
+
+#ifdef TEST_MODULE
+void main() {
+  char *parts[] = {"ayabtu", "aaa"};
+  int result = find("aybabtu", "u");
+  printf("%d\n", result);
+
+  return;
+}
+#endif
